@@ -11,6 +11,7 @@ import {
   AllJob,
   Profile,
   Admin,
+  Game,
 } from "./pages";
 
 const router = createBrowserRouter([
@@ -21,15 +22,6 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <AddJob />,
-      },
-      { path: "stats", element: <Stats /> },
-      {
-        path: "all-jobs",
-        element: <AllJob />,
-      },
-      {
-        path: "landing",
         element: <Landing />,
       },
       {
@@ -43,14 +35,37 @@ const router = createBrowserRouter([
       {
         path: "dashboard",
         element: <DashboardLayout />,
-      },
-      {
-        path: "profile",
-        element: <Profile />,
-      },
-      {
-        path: "admin",
-        element: <Admin />,
+        children: [
+          {
+            index: true,
+            element: <AddJob />,
+          },
+          {
+            path: "game",
+            element: <Game />,
+          },
+          {
+            path: "stats",
+            element: <Stats />,
+          },
+          {
+            path: "all-jobs",
+            element: <AllJob />,
+          },
+          {
+            path: "profile",
+            element: <Profile />,
+          },
+          {
+            path: "admin",
+            element: <Admin />,
+          },
+          // {
+          //   path: "edit-job/:id",
+          //   element: <EditJob />,
+          // },
+          // { path: "delete-job/:id", action: deleteJobAction(queryClient) },
+        ],
       },
     ],
   },

@@ -81,9 +81,9 @@ html {
   --desert-mode-text-secondary-color: #534741; /* Dusty Olive */
 
   --city-mode-bg-color: #f2f2f2; /* Cloudy Gray */
-  --city-mode-text-color: #ffffff; /* White */
+  --city-mode-text-color: #333333; /* Dark Gray for better readability */
   --city-mode-bg-secondary-color: #87ceeb; /* Sky Blue */
-  --city-mode-text-secondary-color: #ffd700; /* Gold Yellow */
+  --city-mode-text-secondary-color: #ff9900
 
   --background-color: var(--grey-50);
   --text-color: var(--grey-900);

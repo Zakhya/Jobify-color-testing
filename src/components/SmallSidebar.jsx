@@ -1,4 +1,4 @@
-import Wrapper from "../assets/wrappers/SmallSidebar";
+import Wrapper from "./SmallSidebar";
 import { FaTimes } from "react-icons/fa";
 
 import Logo from "./Logo";

@@ -11,3 +11,7 @@ export { default as Navbar } from "./Navbar";
 // export { default as ChartsContainer } from "./ChartsContainer";
 // export { default as StatsContainer } from "./StatsContainer";
 // export { default as Loading } from "./Loading";
+export { default as GameButtons } from "./GameButtons";
+export { default as GameStats } from "./GameStats";
+export { default as GuessedLetters } from "./GuessedLetters";
+export { default as Word } from "./Word";
