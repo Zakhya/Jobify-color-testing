@@ -22,7 +22,14 @@ const Wrapper = styled.main`
     font-size: 2rem;
     letter-spacing: 3.5px;
   }
-
+  .puzzle-container {
+    margin-top: 87.5px;
+    width: 100%;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   .highscore-container {
     width: 20%;
     display: flex;
@@ -30,14 +37,7 @@ const Wrapper = styled.main`
   .highscore {
     margin-left: 10px;
   }
-  .puzzle-container {
-    margin-top: 150px;
-    width: 100%;
-    height: 350px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+
   .stats-container {
     width: 75%;
     margin: 0 auto;
@@ -47,6 +47,9 @@ const Wrapper = styled.main`
   }
   .flex {
     display: flex;
+  }
+  .shop-button {
+    color: var(--button-color);
   }
   .buttons-container {
     display: flex;

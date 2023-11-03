@@ -1,15 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Word from "./Word";
 import { wordList } from "../utils/wordList.js";
+import Wrapper from "../assets/wrappers/puzzleContainer.js";
+import Hangman from "../utils/hangman";
 
 const PuzzleContainer = ({ theme }) => {
-  console.log(wordList);
-
-  //generate words and check for duplicates
-
   let randomTheme = wordList[Math.floor(Math.random() * wordList.length)];
+
   const randomThemedEasyWords = randomTheme.easyWords;
-  console.log(randomThemedEasyWords);
 
   let checkForDuplicates = [];
 
@@ -54,21 +52,16 @@ const PuzzleContainer = ({ theme }) => {
   }
   checkForDuplicates.push(puzzle4);
 
-  // game1 = new Hangman(puzzle, 5);
-  // game2 = new Hangman(puzzle2, 5);
-  // game3 = new Hangman(puzzle3, 5);
-  // game4 = new Hangman(puzzle4, 5);
+  let hangmanGames = checkForDuplicates.map((word) => new Hangman(word, 5));
 
   return (
-    <div
-      className="puzzle-container"
-      // style={{ color: theme.textColor }}
-    >
-      <Word puzzle={puzzle} />
-      <Word puzzle={puzzle2} />
-      <Word puzzle={puzzle3} />
-      <Word puzzle={puzzle4} />
-    </div>
+    <Wrapper className="puzzle-container">
+      {hangmanGames.map((game, index) => (
+        <div key={index}>
+          <Word className="word" puzzle={game.puzzle} />
+        </div>
+      ))}
+    </Wrapper>
   );
 };
 

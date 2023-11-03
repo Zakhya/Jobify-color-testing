@@ -69,21 +69,28 @@ html {
   --dark-mode-text-color: #f0f0f0;
   --dark-mode-bg-secondary-color: #3f3f3f;
   --dark-mode-text-secondary-color: var(--grey-300);
+  --dark-mode-button-color: blue;
 
   --arctic-mode-bg-color: #cff1ff;
   --arctic-mode-text-color: #20359e;
   --arctic-mode-bg-secondary-color: #a9c6d1;
   --arctic-mode-text-secondary-color: #111d59;
+  --arctic-mode-button-color: blue;
 
   --desert-mode-bg-color: #f4ecd8; /* Sandy Beige */
   --desert-mode-text-color: #8b5e3c; /* Earthy Brown */
   --desert-mode-bg-secondary-color: #d2b48c; /* Tawny Brown */
   --desert-mode-text-secondary-color: #534741; /* Dusty Olive */
+  --desert-mode-button-color: blue;
 
-  --city-mode-bg-color: #f2f2f2; /* Cloudy Gray */
-  --city-mode-text-color: #333333; /* Dark Gray for better readability */
-  --city-mode-bg-secondary-color: #87ceeb; /* Sky Blue */
-  --city-mode-text-secondary-color: #ff9900
+  --city-mode-bg-color: #4f4d4a; /* Cloudy Gray */
+  --city-mode-text-color: #edeae6; /* Dark Gray for better readability */
+  --city-mode-bg-secondary-color: #bcd1d1; /* Sky Blue */
+  --city-mode-text-secondary-color: orange;
+  --city-mode-button-color: orange;
+  --city-mode-shop-button-text-color: #bd2b2b;
+  --city-mode-reset-button-color: #454444;
+  --city-mode-reset-button-text-color: #6e6e6e;
 
   --background-color: var(--grey-50);
   --text-color: var(--grey-900);
@@ -103,6 +110,7 @@ html {
   --background-color: var(--arctic-mode-bg-color);
   --text-secondary-color: var(--arctic-mode-text-secondary-color);
   --background-secondary-color: var(--arctic-mode-bg-secondary-color);
+  --button-color: var(--arctic-mode-button-color);
 }
 
 .desert-theme {
@@ -110,6 +118,7 @@ html {
   --background-color: var(--desert-mode-bg-color);
   --text-secondary-color: var(--desert-mode-text-secondary-color);
   --background-secondary-color: var(--desert-mode-bg-secondary-color);
+  --button-color: var(--desert-mode-button-color);
 }
 
 .city-theme {
@@ -117,6 +126,10 @@ html {
   --background-color: var(--city-mode-bg-color);
   --text-secondary-color: var(--city-mode-text-secondary-color);
   --background-secondary-color: var(--city-mode-bg-secondary-color);
+  --button-color: var(--city-mode-button-color);
+  --shop-button-text-color: var(--city-mode-shop-button-text-color);
+  --reset-button-color: var(--city-mode-shop-button-color);
+  --reset-button-text-color: var(--city-mode-reset-button-text-color);
 }
 
 body {
