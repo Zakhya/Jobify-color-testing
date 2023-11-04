@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
 import Word from "./Word";
 import Wrapper from "../assets/wrappers/puzzleContainer.js";
 
-const PuzzleContainer = ({ puzzleArray, reloadEachPuzzleToggle }) => {
+const PuzzleContainer = ({ puzzleArray, remainingGuesses }) => {
   return (
     <Wrapper className="puzzle-container">
       {puzzleArray.map((game, index) => (
@@ -10,7 +9,7 @@ const PuzzleContainer = ({ puzzleArray, reloadEachPuzzleToggle }) => {
           <Word
             className="word"
             game={game}
-            reloadEachPuzzleToggle={reloadEachPuzzleToggle}
+            remainingGuesses={remainingGuesses}
           />
         </div>
       ))}

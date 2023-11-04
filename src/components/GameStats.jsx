@@ -1,7 +1,7 @@
 import React from "react";
 import Wrapper from "../assets/wrappers/GameStats";
 
-const GameStats = ({ remainingGuesses, theme }) => {
+const GameStats = ({ remainingGuesses, theme, score }) => {
   return (
     <Wrapper>
       <section className="stats-container">
@@ -11,7 +11,7 @@ const GameStats = ({ remainingGuesses, theme }) => {
         </div>
         <div className="score-container flex">
           <h4 className="score-text">Score:</h4>
-          <h4 className="score-number stat-number">1</h4>
+          <h4 className="score-number stat-number">{score}</h4>
         </div>
         <div className="theme-container flex">
           <h4 className="theme-text">Theme:</h4>

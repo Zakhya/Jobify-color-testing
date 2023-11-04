@@ -2,36 +2,61 @@ import React, { useState, useEffect } from "react";
 import { GameButtons, GameStats, GuessedLetters, Word } from "../components";
 import PuzzleContainer from "../components/PuzzleContainer";
 import Wrapper from "../assets/wrappers/Game";
-import { wordList } from "../utils/wordList.js";
+import { generateRandomPuzzle } from "../utils/generatePuzzle";
 import Hangman from "../utils/hangman";
 
 const Game = () => {
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [isShopOpen, setIsShopOpen] = useState(false);
-  const [reloadEachPuzzleToggle, setReloadEachPuzzleToggle] = useState(false);
   const [puzzleArray, setPuzzleArray] = useState([]);
   const [remainingGuesses, setRemainingGuesses] = useState(10);
   const [theme, setTheme] = useState();
+  const [score, setScore] = useState(0);
 
-  console.log(puzzleArray);
   const guessLetter = (e) => {
-    console.log(puzzleArray);
+    if (remainingGuesses < 1) return;
     const newLetter = e.key;
-    setGuessedLetters((prevGuessedLetters) => [
-      ...prevGuessedLetters,
-      newLetter,
-    ]);
-    setPuzzleArray((prevPuzzleArray) => {
-      return prevPuzzleArray.map((game) => {
-        const updatedGame = new Hangman(game.word.join(""), 5);
-        updatedGame.guessedLetters = [...game.guessedLetters, newLetter];
-        updatedGame.calculateStatus();
-        return updatedGame;
+    if (/^[a-z]$/.test(newLetter) === false) return;
+    if (!guessedLetters.includes(newLetter)) {
+      setGuessedLetters((prevGuessedLetters) => [
+        ...prevGuessedLetters,
+        newLetter,
+      ]);
+      setPuzzleArray((prevPuzzleArray) => {
+        return prevPuzzleArray.map((game) => {
+          const updatedGame = new Hangman(game.word.join(""), 5);
+          updatedGame.guessedLetters = [...game.guessedLetters, newLetter];
+          updatedGame.calculateStatus();
+          return updatedGame;
+        });
       });
-    });
-    setReloadEachPuzzleToggle((prevToggle) => !prevToggle);
+    } else {
+      setRemainingGuesses((prev) => prev - 1);
+    }
   };
-  console.log(guessedLetters);
+
+  useEffect(() => {
+    let puzzleComplete = true;
+    let localScore = 0;
+    puzzleArray.forEach((game) => {
+      game.word.forEach((letter) => {
+        console.log("letterLog");
+        localScore++;
+      });
+      console.log(game.word);
+      if (game.status !== "finished") {
+        puzzleComplete = false;
+      }
+    });
+    if (puzzleComplete) {
+      console.log("You Win");
+      const [hangmanGames, theme] = generateRandomPuzzle("easy", 4);
+      setScore((prev) => prev + localScore);
+      setPuzzleArray(hangmanGames);
+      setTheme(theme);
+      setGuessedLetters([]);
+    }
+  }, [guessedLetters]);
 
   useEffect(() => {
     window.addEventListener("keydown", guessLetter);
@@ -39,35 +64,43 @@ const Game = () => {
     return () => {
       window.removeEventListener("keydown", guessLetter);
     };
-  }, []);
+  }, [guessedLetters]);
 
   useEffect(() => {
-    let randomTheme = wordList[Math.floor(Math.random() * wordList.length)];
-    setTheme(randomTheme.theme);
-    const randomThemedEasyWords = randomTheme.easyWords;
-
-    let uniqueWords = new Set();
-    while (uniqueWords.size < 4) {
-      let randomIndex = Math.floor(
-        Math.random() * randomThemedEasyWords.length
-      );
-      uniqueWords.add(randomThemedEasyWords[randomIndex]);
-    }
-
-    let hangmanGames = Array.from(uniqueWords).map(
-      (word) => new Hangman(word, 5)
-    );
+    const [hangmanGames, theme] = generateRandomPuzzle("easy", 4);
     setPuzzleArray(hangmanGames);
+    setTheme(theme);
   }, []);
 
   return (
     <Wrapper>
-      <GameStats remainingGuesses={remainingGuesses} theme={theme} />
+      <GameStats
+        remainingGuesses={remainingGuesses}
+        theme={theme}
+        score={score}
+      />
+      {remainingGuesses < 1 && (
+        <h3
+          style={{
+            color: "red",
+            width: "100%",
+            marginTop: "75px",
+            marginBottom: "-75px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          You Lose!
+        </h3>
+      )}
       <PuzzleContainer
         puzzleArray={puzzleArray}
-        reloadEachPuzzleToggle={reloadEachPuzzleToggle}
+        remainingGuesses={remainingGuesses}
       />
-      <GuessedLetters guessedLetters={guessedLetters} />
+      <GuessedLetters
+        puzzleArray={puzzleArray}
+        guessedLetters={guessedLetters}
+      />
       <div className="buttons-container">
         <button className="shop-button button">Shop</button>
         <button className="reset-button button">Reset</button>
