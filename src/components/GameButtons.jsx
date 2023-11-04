@@ -5,21 +5,8 @@ const GameButtons = ({ theme }) => {
   return (
     <Wrapper>
       <div className="buttons-container">
-        <button
-          className="shop-button button"
-          // style={{ backgroundColor: theme.color, color: theme.textColor }}
-        >
-          Shop
-        </button>
-        <button
-          className="reset-button button"
-          // style={{
-          //   backgroundColor: theme.resetButtonBackground,
-          //   color: theme.resetButtonText,
-          // }}
-        >
-          Reset
-        </button>
+        <button className="shop-button button">Shop</button>
+        <button>Reset</button>
       </div>
     </Wrapper>
   );

@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
 const Wrapper = styled.div`
-  .stat-number {
+  .guessed-letter {
     color: var(--text-secondary-color);
-    margin-left: 5px;
+    margin-inline: 3.5px;
   }
 `;
 export default Wrapper;

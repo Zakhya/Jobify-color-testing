@@ -1,11 +1,12 @@
 import React from "react";
 import Wrapper from "../assets/wrappers/WordContainer";
 
-const Word = ({ puzzle }) => {
+const Word = ({ game, reloadEachPuzzleToggle }) => {
+  console.log(game.puzzle);
   return (
     <Wrapper>
       <div className="puzzleContainer">
-        {puzzle.split("").map((letter, index) => {
+        {game.puzzle.split("").map((letter, index) => {
           const uppercaseLetter = letter.toUpperCase();
           return <span key={index}>{uppercaseLetter}</span>;
         })}

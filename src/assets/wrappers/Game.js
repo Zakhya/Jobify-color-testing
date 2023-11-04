@@ -41,6 +41,7 @@ const Wrapper = styled.main`
   .stats-container {
     width: 75%;
     margin: 0 auto;
+    margin-top: 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -74,6 +75,10 @@ const Wrapper = styled.main`
   }
   .word-container {
     margin-top: 50px;
+  }
+  .shop-button {
+    background-color: var(--button-color);
+    color: var(--shop-button-text-color);
   }
 `;
 
