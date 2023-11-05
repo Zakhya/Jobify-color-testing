@@ -4,14 +4,18 @@ import PuzzleContainer from "../components/PuzzleContainer";
 import Wrapper from "../assets/wrappers/Game";
 import { generateRandomPuzzle } from "../utils/generatePuzzle";
 import Hangman from "../utils/hangman";
+import { checkForCompletion } from "../utils/puzzleCompletionCheck";
 
 const Game = () => {
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [isShopOpen, setIsShopOpen] = useState(false);
-  const [puzzleArray, setPuzzleArray] = useState([]);
+  const [puzzleArray, setPuzzleArray] = useState([[]]);
   const [remainingGuesses, setRemainingGuesses] = useState(10);
   const [theme, setTheme] = useState();
   const [score, setScore] = useState(0);
+  const [level, setLevel] = useState(1);
+  const [totalLevelGuesses, setTotalLevelGuesses] = useState(0);
+  const [levelSet, setLevelSet] = useState(0);
 
   const guessLetter = (e) => {
     if (remainingGuesses < 1) return;
@@ -23,34 +27,66 @@ const Game = () => {
         newLetter,
       ]);
       setPuzzleArray((prevPuzzleArray) => {
-        return prevPuzzleArray.map((game) => {
-          const updatedGame = new Hangman(game.word.join(""), 5);
-          updatedGame.guessedLetters = [...game.guessedLetters, newLetter];
-          updatedGame.calculateStatus();
-          return updatedGame;
+        if (!Array.isArray(prevPuzzleArray)) {
+          console.error(
+            "Expected prevPuzzleArray to be an array!",
+            prevPuzzleArray
+          );
+          return prevPuzzleArray;
+        }
+        return prevPuzzleArray.map((hangmanArray, index) => {
+          if (index > levelSet) {
+            return hangmanArray;
+          }
+          if (!Array.isArray(hangmanArray)) {
+            console.error(
+              "Expected hangmanArray to be an array!",
+              hangmanArray
+            );
+            return hangmanArray;
+          }
+
+          console.log(hangmanArray);
+          return hangmanArray.map((game) => {
+            const updatedGame = new Hangman(game.word.join(""), 5);
+            updatedGame.guessedLetters = [...game.guessedLetters, newLetter];
+            updatedGame.calculateStatus();
+            return updatedGame;
+          });
         });
       });
     } else {
       setRemainingGuesses((prev) => prev - 1);
     }
+    setTotalLevelGuesses((prev) => prev + 1);
+  };
+
+  const checkGuesses = (guessThreshold) => {
+    const newLevelSet = Math.floor((totalLevelGuesses - 1) / guessThreshold);
+    setLevelSet(newLevelSet);
   };
 
   useEffect(() => {
-    let puzzleComplete = true;
-    let localScore = 0;
-    puzzleArray.forEach((game) => {
-      game.word.forEach((letter) => {
-        console.log("letterLog");
-        localScore++;
-      });
-      console.log(game.word);
-      if (game.status !== "finished") {
-        puzzleComplete = false;
-      }
-    });
+    checkGuesses(7);
+  }, [totalLevelGuesses]);
+
+  useEffect(() => {
+    console.log(puzzleArray);
+    let puzzleComplete, localScore;
+    if (puzzleArray === ![]) {
+      [puzzleComplete, localScore] = checkForCompletion(puzzleArray);
+    }
     if (puzzleComplete) {
       console.log("You Win");
-      const [hangmanGames, theme] = generateRandomPuzzle("easy", 4);
+      let hangmanGames, theme;
+      if (level === 1) {
+        [hangmanGames, theme] = generateRandomPuzzle(1, 2, 2); // difficulty, reps, sets
+      } else if (level === 2) {
+        [hangmanGames, theme] = generateRandomPuzzle(1, 2, 2);
+      }
+      hangmanGames.map((game) => console.log(game));
+      console.log(hangmanGames);
+      setLevel((prev) => prev + 1);
       setScore((prev) => prev + localScore);
       setPuzzleArray(hangmanGames);
       setTheme(theme);
@@ -67,10 +103,12 @@ const Game = () => {
   }, [guessedLetters]);
 
   useEffect(() => {
-    const [hangmanGames, theme] = generateRandomPuzzle("easy", 4);
+    const [hangmanGames, theme] = generateRandomPuzzle(1, 2, 2);
     setPuzzleArray(hangmanGames);
     setTheme(theme);
   }, []);
+
+  console.log(puzzleArray);
 
   return (
     <Wrapper>
@@ -79,23 +117,11 @@ const Game = () => {
         theme={theme}
         score={score}
       />
-      {remainingGuesses < 1 && (
-        <h3
-          style={{
-            color: "red",
-            width: "100%",
-            marginTop: "75px",
-            marginBottom: "-75px",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          You Lose!
-        </h3>
-      )}
+      {remainingGuesses < 1 && <h3 className="losing-message">You Lose!</h3>}
       <PuzzleContainer
         puzzleArray={puzzleArray}
         remainingGuesses={remainingGuesses}
+        totalLevelGuesses={totalLevelGuesses}
       />
       <GuessedLetters
         puzzleArray={puzzleArray}

@@ -2,6 +2,7 @@ import React from "react";
 import Wrapper from "../assets/wrappers/WordContainer";
 
 const Word = ({ game, remainingGuesses }) => {
+  console.log("game", game);
   return (
     <Wrapper>
       <div className="puzzleContainer">

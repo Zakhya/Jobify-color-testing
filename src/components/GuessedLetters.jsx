@@ -7,12 +7,16 @@ const GuessedLetters = ({ guessedLetters, puzzleArray }) => {
       <div className="guessed-letters-container">
         {guessedLetters.map((letter, index) => {
           let isBadGuess = true;
-          for (let i = 0; i < puzzleArray.length; i++) {
-            if (puzzleArray[i].word.includes(letter)) {
-              isBadGuess = false;
-              break;
+
+          outerLoop: for (const hangmanArray of puzzleArray) {
+            for (const game of hangmanArray) {
+              if (game.word.includes(letter)) {
+                isBadGuess = false;
+                break outerLoop;
+              }
             }
           }
+
           return (
             <span
               className={

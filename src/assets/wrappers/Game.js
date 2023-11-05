@@ -80,6 +80,14 @@ const Wrapper = styled.main`
     background-color: var(--button-color);
     color: var(--shop-button-text-color);
   }
+  .losing-message {
+    color: red;
+    width: 100%;
+    margin-top: 75px;
+    margin-bottom: -75px;
+    display: flex;
+    justify-content: center;
+  }
 `;
 
 export default Wrapper;
