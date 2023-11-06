@@ -1,7 +1,7 @@
 export default class Hangman {
-  constructor(word, remainingGuesses) {
+  constructor(word, set) {
     this.word = word.toLowerCase().split("");
-    this.remainingGuesses = remainingGuesses;
+    this.set = set;
     this.status = "playing";
     this.guessedLetters = [];
     this.permaLetters = [];
@@ -64,6 +64,9 @@ export default class Hangman {
     this.calculateStatus();
 
     return isBadGuess;
+  }
+  getSet() {
+    return set;
   }
 
   addToAreaOfEffectLetters(letter) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { GameButtons, GameStats, GuessedLetters, Word } from "../components";
 import PuzzleContainer from "../components/PuzzleContainer";
 import Wrapper from "../assets/wrappers/Game";
@@ -17,53 +17,74 @@ const Game = () => {
   const [totalLevelGuesses, setTotalLevelGuesses] = useState(0);
   const [levelSet, setLevelSet] = useState(0);
 
-  const guessLetter = (e) => {
+  const guessLetter = useCallback((e) => {
     if (remainingGuesses < 1) return;
     const newLetter = e.key;
     if (/^[a-z]$/.test(newLetter) === false) return;
-    if (!guessedLetters.includes(newLetter)) {
-      setGuessedLetters((prevGuessedLetters) => [
-        ...prevGuessedLetters,
-        newLetter,
-      ]);
-      setPuzzleArray((prevPuzzleArray) => {
-        if (!Array.isArray(prevPuzzleArray)) {
-          console.error(
-            "Expected prevPuzzleArray to be an array!",
-            prevPuzzleArray
-          );
-          return prevPuzzleArray;
-        }
-        return prevPuzzleArray.map((hangmanArray, index) => {
-          if (index > levelSet) {
-            return hangmanArray;
-          }
-          if (!Array.isArray(hangmanArray)) {
-            console.error(
-              "Expected hangmanArray to be an array!",
-              hangmanArray
-            );
-            return hangmanArray;
-          }
 
-          console.log(hangmanArray);
-          return hangmanArray.map((game) => {
-            const updatedGame = new Hangman(game.word.join(""), 5);
-            updatedGame.guessedLetters = [...game.guessedLetters, newLetter];
-            updatedGame.calculateStatus();
-            return updatedGame;
-          });
+    const isAlreadyGuessedThisSet = guessedLetters.some(
+      (guess) => guess.letter === newLetter && guess.set === levelSet
+    );
+    if (isAlreadyGuessedThisSet) return;
+
+    const isAlreadyGuessedInPrevSets = guessedLetters.some(
+      (guess) => guess.letter === newLetter && guess.set < levelSet
+    );
+
+    let isBadGuess = true;
+    let isInCurrentOrPrevSet = false;
+
+    outerLoop: for (let i = 0; i <= levelSet; i++) {
+      for (const game of puzzleArray[i]) {
+        if (game.word.includes(newLetter)) {
+          isInCurrentOrPrevSet = true;
+          if (i === levelSet) {
+            isBadGuess = false;
+            break outerLoop;
+          }
+          if (!isAlreadyGuessedInPrevSets) {
+            isBadGuess = false;
+            break outerLoop;
+          }
+        }
+      }
+    }
+
+    if (isAlreadyGuessedInPrevSets && !isInCurrentOrPrevSet) {
+      isBadGuess = true;
+    }
+    setGuessedLetters((prevGuessedLetters) => [
+      ...prevGuessedLetters,
+      { letter: newLetter, set: levelSet, isBadGuess: isBadGuess },
+    ]);
+    setPuzzleArray((prevPuzzleArray) => {
+      return prevPuzzleArray.map((hangmanArray, index) => {
+        if (index > levelSet) {
+          return hangmanArray;
+        }
+        return hangmanArray.map((game) => {
+          const updatedGame = new Hangman(game.word.join(""), index);
+          updatedGame.guessedLetters = [...game.guessedLetters, newLetter];
+          updatedGame.calculateStatus();
+          return updatedGame;
         });
       });
-    } else {
+    });
+    if (isBadGuess) {
       setRemainingGuesses((prev) => prev - 1);
     }
     setTotalLevelGuesses((prev) => prev + 1);
-  };
+  });
 
   const checkGuesses = (guessThreshold) => {
-    const newLevelSet = Math.floor((totalLevelGuesses - 1) / guessThreshold);
-    setLevelSet(newLevelSet);
+    let index = 0;
+    puzzleArray.map((el) => {
+      index++;
+    });
+    const newLevelSet = Math.floor(totalLevelGuesses / guessThreshold);
+    if (newLevelSet < index) {
+      setLevelSet(newLevelSet);
+    }
   };
 
   useEffect(() => {
@@ -71,12 +92,20 @@ const Game = () => {
   }, [totalLevelGuesses]);
 
   useEffect(() => {
+    const [hangmanGames, theme] = generateRandomPuzzle(1, 2, 2);
+    setPuzzleArray(hangmanGames);
+    setTheme(theme);
+  }, []);
+
+  useEffect(() => {
     console.log(puzzleArray);
     let puzzleComplete, localScore;
-    if (puzzleArray === ![]) {
+    if (puzzleArray.length > 0 && puzzleArray[0].length > 0) {
       [puzzleComplete, localScore] = checkForCompletion(puzzleArray);
+    } else {
+      puzzleComplete = false;
     }
-    if (puzzleComplete) {
+    if (puzzleComplete === true) {
       console.log("You Win");
       let hangmanGames, theme;
       if (level === 1) {
@@ -84,8 +113,6 @@ const Game = () => {
       } else if (level === 2) {
         [hangmanGames, theme] = generateRandomPuzzle(1, 2, 2);
       }
-      hangmanGames.map((game) => console.log(game));
-      console.log(hangmanGames);
       setLevel((prev) => prev + 1);
       setScore((prev) => prev + localScore);
       setPuzzleArray(hangmanGames);
@@ -95,20 +122,15 @@ const Game = () => {
   }, [guessedLetters]);
 
   useEffect(() => {
-    window.addEventListener("keydown", guessLetter);
+    const handleKeyDown = (e) => {
+      guessLetter(e);
+    };
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener("keydown", guessLetter);
+      window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [guessedLetters]);
-
-  useEffect(() => {
-    const [hangmanGames, theme] = generateRandomPuzzle(1, 2, 2);
-    setPuzzleArray(hangmanGames);
-    setTheme(theme);
-  }, []);
-
-  console.log(puzzleArray);
+  }, [guessLetter]);
 
   return (
     <Wrapper>
@@ -124,6 +146,7 @@ const Game = () => {
         totalLevelGuesses={totalLevelGuesses}
       />
       <GuessedLetters
+        levelSet={levelSet}
         puzzleArray={puzzleArray}
         guessedLetters={guessedLetters}
       />

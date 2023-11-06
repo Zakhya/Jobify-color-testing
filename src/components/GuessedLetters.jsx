@@ -1,30 +1,30 @@
 import React from "react";
 import Wrapper from "../assets/wrappers/GuessedLetters";
 
-const GuessedLetters = ({ guessedLetters, puzzleArray }) => {
+const GuessedLetters = ({ guessedLetters, puzzleArray, levelSet }) => {
+  guessedLetters.map((letterObject) => {
+    return console.log(letterObject.isBadGuess);
+  });
   return (
     <Wrapper>
       <div className="guessed-letters-container">
-        {guessedLetters.map((letter, index) => {
-          let isBadGuess = true;
+        {guessedLetters.map((letterObject, index) => {
+          let isInCurrentSet = letterObject.set === levelSet;
 
-          outerLoop: for (const hangmanArray of puzzleArray) {
-            for (const game of hangmanArray) {
-              if (game.word.includes(letter)) {
-                isBadGuess = false;
-                break outerLoop;
-              }
-            }
+          let className;
+          if (isInCurrentSet) {
+            className = letterObject.isBadGuess
+              ? "wrong-guessed-letter"
+              : "guessed-letter";
+          } else {
+            className = letterObject.isBadGuess
+              ? "old-wrong-guessed-letter"
+              : "old-guessed-letter";
           }
 
           return (
-            <span
-              className={
-                isBadGuess === true ? "wrong-guessed-letter" : "guessed-letter"
-              }
-              key={index}
-            >
-              {letter}
+            <span className={className} key={index}>
+              {letterObject.letter}
             </span>
           );
         })}

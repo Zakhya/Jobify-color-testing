@@ -6,11 +6,6 @@ const PuzzleContainer = ({
   remainingGuesses,
   totalLevelGuesses,
 }) => {
-  // If we're on the second element and totalLevelGuesses > 7, render it
-  console.log("totalLevelGuesses", totalLevelGuesses);
-  puzzleArray.map((hangmanArray) =>
-    hangmanArray.map((game) => console.log(game))
-  );
   return (
     <Wrapper className="puzzle-container">
       {puzzleArray.map((hangmanArray, hangmanArrayIndex) => {
@@ -35,7 +30,6 @@ const PuzzleContainer = ({
             </div>
           ));
         }
-        // For elements beyond the second, or if totalLevelGuesses <= 7, render nothing
         return null;
       })}
     </Wrapper>

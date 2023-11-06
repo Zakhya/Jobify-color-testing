@@ -25,7 +25,7 @@ export const generateRandomPuzzle = (difficulty, reps, sets) => {
       for (let j = 0; j < _reps; j++) {
         if (index < wordsArray.length) {
           const word = wordsArray[index++];
-          const hangmanGame = new Hangman(word, 5);
+          const hangmanGame = new Hangman(word, i);
           hangmanGameSet.push(hangmanGame);
         }
       }
