@@ -5,21 +5,12 @@ const PuzzleContainer = ({
   puzzleArray,
   remainingGuesses,
   totalLevelGuesses,
+  levelSet,
 }) => {
   return (
     <Wrapper className="puzzle-container">
       {puzzleArray.map((hangmanArray, hangmanArrayIndex) => {
-        if (hangmanArrayIndex === 0) {
-          return hangmanArray.map((game, index) => (
-            <div key={`hangman-set-${hangmanArrayIndex}-game-${index}`}>
-              <Word
-                className="word"
-                game={game}
-                remainingGuesses={remainingGuesses}
-              />
-            </div>
-          ));
-        } else if (hangmanArrayIndex === 1 && totalLevelGuesses > 7) {
+        if (hangmanArrayIndex <= levelSet) {
           return hangmanArray.map((game, index) => (
             <div key={`hangman-set-${hangmanArrayIndex}-game-${index}`}>
               <Word

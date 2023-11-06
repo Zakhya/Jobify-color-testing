@@ -4,7 +4,6 @@ export const checkForCompletion = (puzzleArray) => {
   puzzleArray.forEach((hangman) => {
     hangman.forEach((game) => {
       game.word.forEach((letter) => {
-        console.log("letterLog");
         localScore++;
       });
       if (game.status !== "finished") {

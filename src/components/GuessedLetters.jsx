@@ -2,15 +2,11 @@ import React from "react";
 import Wrapper from "../assets/wrappers/GuessedLetters";
 
 const GuessedLetters = ({ guessedLetters, puzzleArray, levelSet }) => {
-  guessedLetters.map((letterObject) => {
-    return console.log(letterObject.isBadGuess);
-  });
   return (
     <Wrapper>
       <div className="guessed-letters-container">
         {guessedLetters.map((letterObject, index) => {
           let isInCurrentSet = letterObject.set === levelSet;
-
           let className;
           if (isInCurrentSet) {
             className = letterObject.isBadGuess

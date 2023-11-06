@@ -24,8 +24,9 @@ const Wrapper = styled.main`
   }
   .puzzle-container {
     margin-top: 87.5px;
+    margin-bottom: 75px;
     width: 100%;
-    height: 350px;
+    min-height: 350px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -80,13 +81,16 @@ const Wrapper = styled.main`
     background-color: var(--button-color);
     color: var(--shop-button-text-color);
   }
-  .losing-message {
-    color: red;
+  .losing-message,
+  .next-set-warning {
     width: 100%;
     margin-top: 75px;
     margin-bottom: -75px;
     display: flex;
     justify-content: center;
+  }
+  .losing-message {
+    color: red;
   }
 `;
 

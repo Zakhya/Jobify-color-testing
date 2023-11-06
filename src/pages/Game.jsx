@@ -10,12 +10,25 @@ const Game = () => {
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [isShopOpen, setIsShopOpen] = useState(false);
   const [puzzleArray, setPuzzleArray] = useState([[]]);
-  const [remainingGuesses, setRemainingGuesses] = useState(10);
+  const [remainingGuesses, setRemainingGuesses] = useState(20);
   const [theme, setTheme] = useState();
   const [score, setScore] = useState(0);
   const [level, setLevel] = useState(1);
   const [totalLevelGuesses, setTotalLevelGuesses] = useState(0);
   const [levelSet, setLevelSet] = useState(0);
+  const [revealThreshold, setRevealThreshold] = useState(1);
+  let guessesUntilNextSet =
+    revealThreshold - (totalLevelGuesses % revealThreshold);
+
+  // console.log("guessedLetters", guessedLetters);
+  // console.log("puzzleArray", puzzleArray);
+  // console.log("remainingGuesses", remainingGuesses);
+  // console.log("theme", theme);
+  // console.log("score", score);
+  // console.log("level", level);
+  // console.log("totalLevelGuesses", totalLevelGuesses);
+  console.log("levelSet", levelSet);
+  console.log("puzzleArray.length", puzzleArray.length);
 
   const guessLetter = useCallback((e) => {
     if (remainingGuesses < 1) return;
@@ -88,17 +101,16 @@ const Game = () => {
   };
 
   useEffect(() => {
-    checkGuesses(7);
+    checkGuesses(revealThreshold);
   }, [totalLevelGuesses]);
 
   useEffect(() => {
-    const [hangmanGames, theme] = generateRandomPuzzle(1, 2, 2);
+    const [hangmanGames, theme] = generateRandomPuzzle(1, 1, 3);
     setPuzzleArray(hangmanGames);
     setTheme(theme);
   }, []);
 
   useEffect(() => {
-    console.log(puzzleArray);
     let puzzleComplete, localScore;
     if (puzzleArray.length > 0 && puzzleArray[0].length > 0) {
       [puzzleComplete, localScore] = checkForCompletion(puzzleArray);
@@ -109,11 +121,24 @@ const Game = () => {
       console.log("You Win");
       let hangmanGames, theme;
       if (level === 1) {
-        [hangmanGames, theme] = generateRandomPuzzle(1, 2, 2); // difficulty, reps, sets
+        [hangmanGames, theme] = generateRandomPuzzle(1, 1, 4); // difficulty, reps, sets
+        setLevelSet(0);
+        setTotalLevelGuesses(0);
+        setRevealThreshold(1);
+        setLevel((prev) => prev + 1);
       } else if (level === 2) {
+        [hangmanGames, theme] = generateRandomPuzzle(1, 1, 3);
+        setLevelSet(0);
+        setTotalLevelGuesses(0);
+        setRevealThreshold(2);
+        setLevel((prev) => prev + 1);
+      } else if (level === 3) {
         [hangmanGames, theme] = generateRandomPuzzle(1, 2, 2);
+        setLevelSet(0);
+        setTotalLevelGuesses(0);
+        setRevealThreshold(3);
+        setLevel((prev) => prev + 1);
       }
-      setLevel((prev) => prev + 1);
       setScore((prev) => prev + localScore);
       setPuzzleArray(hangmanGames);
       setTheme(theme);
@@ -138,9 +163,17 @@ const Game = () => {
         remainingGuesses={remainingGuesses}
         theme={theme}
         score={score}
+        level={level}
       />
-      {remainingGuesses < 1 && <h3 className="losing-message">You Lose!</h3>}
+      {remainingGuesses < 1 ? (
+        <h3 className="losing-message">You Lose!</h3>
+      ) : levelSet + 1 === puzzleArray.length ? (
+        <h4 className="next-set-warning">Next Set In:-</h4>
+      ) : (
+        <h4 className="next-set-warning">Next Set In: {guessesUntilNextSet}</h4>
+      )}
       <PuzzleContainer
+        levelSet={levelSet}
         puzzleArray={puzzleArray}
         remainingGuesses={remainingGuesses}
         totalLevelGuesses={totalLevelGuesses}
